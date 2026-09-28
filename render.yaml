@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: wep
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: ETHERSCAN_API_KEY
+        sync: false
+      - key: WEP_CHAIN_ID
+        value: "1"
