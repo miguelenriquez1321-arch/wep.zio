@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title or "Wep — Información de direcciones blockchain" }}</title>
+    <meta name="description" content="Wep: información útil y análisis de direcciones blockchain.">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #1e293b;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --accent: #2563eb;
+            --accent-dark: #1d4ed8;
+            --ok: #16a34a;
+            --warn-bg: #fef9c3;
+            --warn-text: #854d0e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f5f7fb;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--bg);
+            color: white;
+            padding: 16px 24px;
+        }
+
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 18px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0 0 12px;
+            line-height: 1.25;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0 0 12px;
+        }
+
+        p {
+            margin: 0 0 12px;
+        }
+
+        .lead {
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        .address {
+            word-break: break-all;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            background: #f1f5f9;
+            border: 1px solid var(--line);
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .pending {
+            color: var(--muted);
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-demo {
+            background: var(--warn-bg);
+            color: var(--warn-text);
+        }
+
+        .badge-free {
+            background: #dcfce7;
+            color: var(--ok);
+        }
+
+        .badge-pro {
+            background: #dbeafe;
+            color: var(--accent-dark);
+        }
+
+        .notice {
+            background: var(--warn-bg);
+            color: var(--warn-text);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .grid .card {
+            margin-bottom: 0;
+        }
+
+        ul.features {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+        }
+
+        ul.features li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+            border-bottom: 1px solid var(--line);
+        }
+
+        ul.features li:last-child {
+            border-bottom: none;
+        }
+
+        ul.features li::before {
+            content: "✓";
+            position: absolute;
+            left: 4px;
+            color: var(--ok);
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            padding: 13px 22px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-disabled {
+            background: #e2e8f0;
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: #eff6ff;
+        }
+
+        form.search {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        form.search input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .steps li {
+            counter-increment: step;
+            padding: 10px 0 10px 44px;
+            position: relative;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 36px 20px;
+            font-size: 14px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a class="logo" href="/">W<span>e</span>p</a>
+        <nav>
+            <a href="/">Inicio</a>
+            <a href="/pay">Pagos</a>
+            <a href="/#como-funciona">Cómo funciona</a>
+            <a href="/#planes">Planes</a>
+            <a href="/about">Acerca de</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    <div class="card">
+        <h1>{{ title or "Wep" }}</h1>
+        <p>{{ content or "" }}</p>
+    </div>
+    {% endblock %}
+</main>
+
+<footer>
+    Wep — Información de direcciones blockchain<br>
+    <span class="muted">Proyecto en desarrollo · Los datos en tiempo real se conectarán en una próxima etapa</span>
+    {% if current_year %} · © {{ current_year }}{% endif %}
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h1>Acerca de Wep</h1>
+    <p class="lead">
+        <strong>Wep es una plataforma diseñada para facilitar la consulta y la
+        comprensión de la información relacionada con direcciones blockchain.</strong>
+        Su objetivo es presentar los datos relevantes de cada dirección de forma
+        clara, breve y fácil de interpretar, evitando información innecesaria y
+        reduciendo la complejidad habitual de las herramientas blockchain.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Una página para cada dirección</h2>
+    <p>
+        Cada dirección cuenta con una página específica en Wep, donde los
+        usuarios pueden consultar información relevante sobre su actividad y
+        recibir recomendaciones que les ayudan a comprender mejor los datos
+        disponibles.
+    </p>
+    <p>
+        <a class="btn btn-secondary" href="/">Consultar una dirección</a>
+    </p>
+</div>
+
+<div class="card">
+    <h2>Pagos simplificados</h2>
+    <p>
+        Wep busca simplificar el proceso de realizar pagos mediante blockchain.
+        El usuario indica la dirección que recibirá los fondos, selecciona la
+        cantidad correspondiente y solicita el pago desde una interfaz sencilla.
+    </p>
+    <p>
+        <a class="btn btn-secondary" href="/pay">Ir a la herramienta de pagos</a>
+    </p>
+</div>
+
+<div class="notice">
+    <strong>Aviso importante — Wep no custodia fondos:</strong>
+    la ejecución y confirmación de cada transacción depende de una cartera
+    (<em>wallet</em>) compatible y de la aprobación del propio usuario. Wep no
+    controla ni custodia los fondos del usuario: la transacción se realiza
+    mediante la cartera seleccionada por el usuario y queda sujeta a las
+    condiciones y comisiones de la red blockchain utilizada. Wep no es una
+    cartera de criptomonedas ni un intermediario de pagos.
+</div>
+
+<div class="card">
+    <h2>Nuestra visión</h2>
+    <p>
+        Wep combina información, recomendaciones y herramientas de pago en una
+        experiencia sencilla y accesible, con el objetivo de facilitar la
+        comprensión y el uso práctico de la tecnología blockchain.
+    </p>
+    <p class="muted">
+        Proyecto en desarrollo: las funciones se publican únicamente cuando
+        están disponibles de verdad.
+    </p>
+</div>
+
+{% endblock %}

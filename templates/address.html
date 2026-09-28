@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <span class="badge badge-free">Datos en tiempo real · {{ data.network_name }}</span>
+    <h1>Información de la dirección</h1>
+    <p class="lead">
+        Página de Wep correspondiente a una dirección blockchain concreta.
+    </p>
+
+    <div class="address">{{ data.address }}</div>
+    <p class="muted" style="margin-top:10px;">
+        Red: <strong>{{ data.network_name }}</strong>
+    </p>
+</div>
+
+{% if not data.api_configured %}
+<div class="notice">
+    <strong>API no configurada:</strong>
+    falta la clave de Etherscan en el archivo <code>.env</code>. Los datos en
+    tiempo real no estarán disponibles hasta configurarla.
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Resumen de la dirección</h2>
+
+    <div class="row">
+        <span class="label">Proyecto</span>
+        <span class="value">Wep</span>
+    </div>
+    <div class="row">
+        <span class="label">Red</span>
+        <span class="value">{{ data.network_name }}</span>
+    </div>
+    <div class="row">
+        <span class="label">Dirección</span>
+        <span class="value" style="word-break:break-all;">{{ data.address }}</span>
+    </div>
+
+    {% for field in data.fields %}
+    <div class="row">
+        <span class="label">{{ field.label }}</span>
+        {% if field.status == "real" %}
+        <span class="value">{{ field.value }}</span>
+        {% elif field.status == "empty" %}
+        <span class="value pending">{{ field.value }}</span>
+        {% else %}
+        <span class="value pending" {% if field.note %}title="{{ field.note }}"{% endif %}>
+            No disponible
+        </span>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <p class="muted" style="margin-top:14px;">
+        {% if data.api_configured %}
+        Datos obtenidos de Etherscan API ({{ data.network_name }}) ·
+        Consulta: {{ data.fetched_at }} ·
+        Los valores <em>“No disponible”</em> indican que la API no devolvió el
+        dato en este momento (no se muestran valores inventados).
+        {% else %}
+        Los datos en tiempo real se mostrarán cuando la API esté configurada.
+        {% endif %}
+    </p>
+
+    <p style="margin-top:16px;">
+        <a class="btn btn-secondary" href="{{ data.explorer_url }}" target="_blank" rel="noopener">
+            Ver esta dirección en el explorador
+        </a>
+        <a class="btn" href="/pay?to={{ data.address }}">
+            Solicitar un pago a esta dirección
+        </a>
+    </p>
+</div>
+
+<div class="card">
+    <h2>Cómo interpretar esta página</h2>
+    <ul class="features">
+        <li>
+            <strong>Balance nativo:</strong> cantidad de la moneda de la red
+            (ETH) que contiene la dirección ahora mismo.
+        </li>
+        <li>
+            <strong>Transacciones enviadas:</strong> número de transacciones que
+            esta dirección ha emitido. No incluye las recibidas.
+        </li>
+        <li>
+            <strong>Última actividad:</strong> fecha de la transacción más
+            reciente registrada para la dirección.
+        </li>
+        <li>
+            <strong>Tokens recientes:</strong> tokens vistos en las últimas
+            transferencias. La presencia de un token no implica que la dirección
+            lo haya comprado: cualquiera puede enviar tokens a una dirección.
+        </li>
+    </ul>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <span class="badge badge-free">{{ plans.free.name }} · {{ plans.free.price }}</span>
+        <ul class="features">
+            {% for feature in plans.free.features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <span class="badge badge-pro">{{ plans.pro.name }} · {{ plans.pro.price }}</span>
+        <p class="muted">{{ plans.pro.status }}</p>
+        <ul class="features">
+            {% for feature in plans.pro.features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+
+        {% if plans.pro.payment_url %}
+        <a class="btn" href="{{ plans.pro.payment_url }}">Comprar Wep Pro</a>
+        {% else %}
+        <button class="btn btn-disabled" type="button" disabled>Disponible próximamente</button>
+        <p class="muted" style="margin-top:10px;">
+            El acceso a Wep Pro todavía no está a la venta: primero definiremos
+            las funciones finales y después activaremos los pagos.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="notice">
+    <strong>Transparencia:</strong>
+    esta página es parte de un proyecto en desarrollo. La información básica
+    es y seguirá siendo gratuita; las funciones avanzadas se anunciarán
+    únicamente cuando estén disponibles de verdad.
+</div>
+
+<script>
+    // Botón para copiar la dirección (solo comodidad de uso; no envía datos).
+    const addr = document.querySelector(".address");
+    if (addr) {
+        addr.style.cursor = "pointer";
+        addr.title = "Haz clic para copiar la dirección";
+        addr.addEventListener("click", function () {
+            navigator.clipboard.writeText(addr.textContent.trim());
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h1>Wep — Información útil para cada dirección blockchain</h1>
+    <p class="lead">
+        Wep organiza y presenta información sobre direcciones blockchain de forma
+        clara y accesible. Consulta una dirección y obtén una página específica
+        con su resumen, su actividad y sus herramientas avanzadas.
+    </p>
+
+    <form class="search" id="addressForm">
+        <input
+            id="address"
+            type="text"
+            placeholder="Introduce una dirección (0x...)"
+            autocomplete="off"
+            spellcheck="false"
+            required
+        >
+        <button type="submit" class="btn">Consultar</button>
+    </form>
+    <p class="muted">
+        Formato válido: <code>0x</code> seguido de 40 caracteres hexadecimales.
+    </p>
+</div>
+
+<div class="card" id="como-funciona">
+    <h2>Cómo funciona</h2>
+    <ol class="steps">
+        <li>
+            <strong>Introduce una dirección.</strong>
+            Cada dirección tiene su propia página en Wep, con una URL del tipo
+            <code>/address/0x...</code>
+        </li>
+        <li>
+            <strong>Consulta la información básica.</strong>
+            Resumen, actividad y datos generales de la dirección, sin necesidad
+            de registro.
+        </li>
+        <li>
+            <strong>Profundiza cuando lo necesites.</strong>
+            Wep Pro reunirá herramientas avanzadas de análisis y seguimiento
+            para usuarios frecuentes.
+        </li>
+    </ol>
+</div>
+
+<div class="card">
+    <h2>Pagos desde tu cartera</h2>
+    <p class="lead">
+        Wep también simplifica los pagos mediante blockchain: indicas la
+        dirección que recibe los fondos y la cantidad, y Wep genera una
+        solicitud de pago que abres y firmas en tu cartera compatible.
+    </p>
+    <p>
+        <a class="btn" href="/pay">Solicitar un pago</a>
+        <a class="btn btn-secondary" href="/about">Cómo funciona y garantías</a>
+    </p>
+    <p class="muted">
+        Wep no custodia fondos: la transacción se ejecuta desde tu cartera y
+        tú la apruebas. Sujeta a las condiciones y comisiones de la red.
+    </p>
+</div>
+
+<div class="grid" id="planes">
+    <div class="card">
+        <span class="badge badge-free">{{ plans.free.name }} · {{ plans.free.price }}</span>
+        <ul class="features">
+            {% for feature in plans.free.features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <span class="badge badge-pro">{{ plans.pro.name }} · {{ plans.pro.price }}</span>
+        <p class="muted">{{ plans.pro.status }}</p>
+        <ul class="features">
+            {% for feature in plans.pro.features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+        <p class="muted">
+            Todavía no se cobra nada: primero definiremos el valor exacto de
+            Wep Pro y después integraremos el sistema de pagos.
+        </p>
+    </div>
+</div>
+
+<div class="notice">
+    <strong>Estado actual del proyecto:</strong>
+    la página de cada dirección ya muestra datos reales de Ethereum (balance,
+    transacciones, última actividad y tokens recientes) obtenidos mediante la
+    API de Etherscan. Wep Pro está en fase de definición: todavía no se cobra
+    nada.
+</div>
+
+<script>
+    document
+        .getElementById("addressForm")
+        .addEventListener("submit", function (event) {
+            event.preventDefault();
+            const address = document.getElementById("address").value.trim();
+            if (!address) {
+                return;
+            }
+            window.location.href = "/address/" + address;
+        });
+</script>
+
+{% endblock %}

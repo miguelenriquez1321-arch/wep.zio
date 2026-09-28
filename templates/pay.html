@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <span class="badge badge-free">Herramienta no custodial</span>
+    <h1>Solicitar un pago</h1>
+    <p class="lead">
+        Indica la dirección que recibirá los fondos y la cantidad. Wep genera
+        una solicitud de pago que puedes abrir directamente en tu cartera
+        compatible. <strong>La transacción la firmas tú</strong>, desde tu
+        cartera, y Wep nunca tiene acceso a tus fondos.
+    </p>
+</div>
+
+<div class="notice">
+    <strong>Aviso importante:</strong>
+    Wep no custodia ni controla fondos. La ejecución y confirmación de la
+    transacción dependen de tu cartera (<em>wallet</em>) compatible y de tu
+    propia aprobación. La operación queda sujeta a las condiciones y comisiones
+    de la red blockchain utilizada. Verifica siempre la dirección de destino
+    antes de aprobar cualquier transacción.
+</div>
+
+<div class="card">
+    <h2>Datos del pago</h2>
+
+    {% if error %}
+    <div class="notice">
+        <strong>Revisa los datos:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="get" action="/pay">
+        <p>
+            <label class="label" for="to"><strong>Dirección que recibe los fondos</strong></label><br>
+            <input
+                id="to"
+                name="to"
+                type="text"
+                placeholder="0x..."
+                autocomplete="off"
+                spellcheck="false"
+                value="{{ to or '' }}"
+                required
+                style="width:100%;padding:13px 15px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:monospace;"
+            >
+        </p>
+        <p>
+            <label class="label" for="amount"><strong>Cantidad (ETH)</strong></label><br>
+            <input
+                id="amount"
+                name="amount"
+                type="text"
+                inputmode="decimal"
+                placeholder="0.01"
+                value="{{ amount or '' }}"
+                required
+                style="width:100%;padding:13px 15px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;"
+            >
+        </p>
+        <button type="submit" class="btn">Generar solicitud de pago</button>
+    </form>
+</div>
+
+{% if request_uri %}
+<div class="card">
+    <h2>Solicitud generada</h2>
+
+    <div class="row">
+        <span class="label">Destino</span>
+        <span class="value" style="word-break:break-all;">{{ to }}</span>
+    </div>
+    <div class="row">
+        <span class="label">Cantidad</span>
+        <span class="value">{{ amount }} ETH</span>
+    </div>
+    <div class="row">
+        <span class="label">Red</span>
+        <span class="value">{{ network_name }}</span>
+    </div>
+
+    <p class="muted" style="margin-top:14px;">
+        Solicitud estándar (EIP-681):
+    </p>
+    <div class="address" id="requestUri">{{ request_uri }}</div>
+
+    <p style="margin-top:16px;">
+        <a class="btn" href="{{ request_uri }}">Abrir en mi cartera</a>
+        <button class="btn btn-secondary" type="button"
+                onclick="navigator.clipboard.writeText(document.getElementById('requestUri').textContent.trim())">
+            Copiar solicitud
+        </button>
+        <a class="btn btn-secondary" href="/address/{{ to }}">Ver esta dirección en Wep</a>
+    </p>
+
+    <p class="muted">
+        Si el botón "Abrir en mi cartera" no hace nada en tu dispositivo, copia
+        la solicitud y pégala en tu cartera compatible, o envía el pago
+        manualmente indicando la dirección y la cantidad exactas mostradas arriba.
+    </p>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Cómo funciona</h2>
+    <ol class="steps">
+        <li>
+            <strong>Introduces los datos:</strong>
+            dirección de destino y cantidad en ETH (red {{ network_name }}).
+        </li>
+        <li>
+            <strong>Wep genera la solicitud:</strong>
+            un enlace de pago estándar que entienden las carteras compatibles.
+        </li>
+        <li>
+            <strong>Tu cartera ejecuta el pago:</strong>
+            tú revisas los datos y apruebas la transacción. Wep no interviene
+            en la firma ni en el envío de fondos.
+        </li>
+    </ol>
+</div>
+
+{% endblock %}
